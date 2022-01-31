@@ -1,0 +1,11 @@
+node_modules/
+Dockerfile.dev
+.bashrc
+.nuxt
+.env
+.env.dev
+.env.production
+.env.prod
+deploy.sh
+Dockerfile
+docker-compose.yml

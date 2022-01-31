@@ -1,0 +1,37 @@
+{
+  "name": "cpms-frontend",
+  "version": "1.0.0",
+  "description": "Test Nuxt System",
+  "repository": "",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "start": "nuxt start",
+    "assets": "webpack --config webpack.static.js --mode development"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "await-to-js": "^3.0.0",
+    "copy-webpack-plugin": "^6.1.0",
+    "js-file-download": "^0.4.12",
+    "moment": "^2.29.1",
+    "nuxt": "^2.15.8",
+    "phil-reg-prov-mun-brgy": "^1.1.0",
+    "qrcode": "^1.5.0",
+    "remove-files-webpack-plugin": "^1.5.0",
+    "sweetalert2": "^11.3.0",
+    "vee-validate": "^3.4.14",
+    "vue-cookies": "^1.7.4",
+    "vue-fragment": "^1.5.2",
+    "vue-qrcode-reader": "^3.1.0",
+    "vuejs-paginate": "^2.1.0",
+    "webpack": "^4.46.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.9.2",
+    "webpack-merge-and-include-globally": "^2.3.4"
+  }
+}

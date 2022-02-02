@@ -11,12 +11,13 @@
               <div class="form-group">
                 <!-- <label for="">User ID</label> -->
                 <input
-                  type="text"
+                  type="search"
                   class="form-control"
                   id=""
                   placeholder="Student ID Number"
-                  @keyup.enter="searchStudentIdNum"
-                  v-model="id_value"
+                  v-model="search_value"
+                  @input="onSearchInput"
+                  @keypress.enter="$refs.searchButton.click()"
                 />
               </div>
             </div>
@@ -34,6 +35,7 @@
                 class="btn btn-outline-primary"
                 @click.prevent="searchStudentIdNum"
                 v-if="!isSearchLoading"
+                ref="searchButton"
               >
                 <i class="fas fa-search"></i>
               </button>
@@ -133,7 +135,7 @@ export default {
   props: [],
   data: () => ({
     created_student_list: [],
-    id_value: "",
+    search_value: null,
     isLoading: false,
     isSearchLoading: false,
     pages: 0,
@@ -148,7 +150,17 @@ export default {
   },
 
   methods: {
-    searchStudentIdNum() {},
+    searchStudentIdNum() {
+      if (this.search_value) {
+        this.getGeneratedCode();
+      }
+    },
+
+    onSearchInput() {
+      if (!this.search_value) {
+        this.getGeneratedCode();
+      }
+    },
 
     getPaginateList(page) {
       this.getGeneratedCode(page);
@@ -164,14 +176,17 @@ export default {
     },
 
     async getGeneratedCode(page = 1) {
-      console.log("session", this.session);
       this.isLoading = true;
       try {
         const payload = {
           page: page,
           per_page: this.per_page,
-          company_id: this.session?.company_id || null,
+          account_id: this.$store.state.userAccount.id,
+          office_id: this.$store.state.user.office_detail_id,
         };
+        if (this.search_value) {
+          payload.search = this.search_value;
+        }
         const { status, data } = await this.$store.dispatch(
           `Student/CreatedStudentList`,
           payload

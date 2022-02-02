@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
+  middleware: ["unauth"],
   name: "dashboard-layout",
   props: [],
 

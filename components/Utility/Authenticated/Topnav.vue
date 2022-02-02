@@ -58,10 +58,14 @@ export default {
         title: `About to Logout`,
         text: `Are you sure you want to logout? Your session and information will remove to this device.`,
         icon: "warning",
+        confirmButtonText: "Logout",
         preConfirm: () => {
           let vm = this;
           return new Promise((resolve, reject) => {
             localStorage.clear();
+            this.$store.commit("setUserAccount", {});
+            this.$store.commit("setIsLogged", false);
+            this.$store.commit("setUser", {});
             setTimeout(() => {
               vm.$router.push({
                 name: "login",

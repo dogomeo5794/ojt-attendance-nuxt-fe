@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
+  middleware: ["auth", "role"],
   name: "dashboard-layout",
   props: [],
 

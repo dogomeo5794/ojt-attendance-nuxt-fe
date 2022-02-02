@@ -7,17 +7,16 @@
         </div> -->
         <div class="card-body">
           <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="col-lg-6 col-md-6 col-sm-6">
               <div class="form-group">
                 <!-- <label for="">User ID</label> -->
                 <input
-                  type="search"
+                  type="text"
                   class="form-control"
                   id=""
-                  placeholder="Student ID Number"
-                  v-model="search_value"
-                  @input="onSearchInput"
-                  @keypress.enter="$refs.searchButton.click()"
+                  placeholder="Company or Auth. Personnel ID"
+                  @keyup.enter="searchStudentIdNum"
+                  v-model="id_value"
                 />
               </div>
             </div>
@@ -35,7 +34,6 @@
                 class="btn btn-outline-primary"
                 @click.prevent="searchStudentIdNum"
                 v-if="!isSearchLoading"
-                ref="searchButton"
               >
                 <i class="fas fa-search"></i>
               </button>
@@ -48,62 +46,80 @@
         >
           <table
             class="table-image table table-sm table-hover table-head-fixed"
-            v-if="isLoading === true || created_student_list.length > 0"
+            v-if="isLoading === true || auth_personnel_list.length > 0"
           >
             <thead>
               <tr>
                 <th style="width: 10px">#</th>
-                <th scope="col" class="text-center">QR Code</th>
-                <th scope="col">Student ID No.</th>
-                <th scope="col">Full Name</th>
-                <th scope="col" style="width: 200px">OJT Office</th>
+                <th scope="col">Auth. Personnel Name</th>
+                <th scope="col">Office Name</th>
+                <th scope="col" style="width: 160px" class="text-center">
+                  Account Status
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(i, k) in created_student_list" :key="k">
+              <tr v-for="(i, k) in auth_personnel_list" :key="k">
                 <td>{{ (page - 1) * per_page + (k + 1) }}</td>
-                <td style="text-align: center">
-                  <img
-                    :src="`${
-                      i.student_qrcode || `/img/icons/qr-code-error.png`
-                    }`"
-                    class="img-fluid img-thumbnail"
-                    :alt="`QR Code for ${i.school_id}`"
-                    :style="`width: 100px;${
-                      i.student_qrcode
-                        ? 'border: 1px solid;border-radius: 0;padding: 0;'
-                        : 'opacity: 0.5;'
-                    }`"
-                  />
-                </td>
                 <td class="text-nowrap">
                   <a
                     href="#"
                     class="btn-link"
-                    @click.prevent="viewStudentInfo(i)"
+                    @click.prevent="viewPersonnelInfo(i)"
+                    style="display: block"
+                    v-if="i.company_id"
                   >
-                    {{ i.school_id }}
+                    {{ i.company_id }}
                   </a>
-                </td>
-                <td>
-                  <span style="display: block">{{ i.student_name }}</span>
-                  <span class="student-address-span">{{ i.address }}</span>
-                </td>
-                <td>
-                  {{ hasOffice(i.office).id || "" }}
                   <span class="student-address-span">{{
-                    hasOffice(i.office).name || "---"
+                    i.personnel_name
                   }}</span>
                 </td>
+                <td>
+                  <span style="display: block"
+                    >{{ i.office_reg_id }} | {{ i.office_name }}</span
+                  >
+                  <span class="student-address-span">{{
+                    i.office_address
+                  }}</span>
+                </td>
+                <td class="text-right">
+                  <span
+                    class="form-control text-center"
+                    style="pointer-events: none"
+                    v-if="i.loading"
+                  >
+                    <i class="fas fa-spinner fa-spin"></i> Loading...
+                  </span>
+                  <select
+                    name="account_status"
+                    id=""
+                    class="form-control"
+                    style="text-transform: uppercase"
+                    v-if="i.evaluated === 'pending' && !i.loading"
+                    @change.prevent="changeAccountStatus($event, i, k)"
+                  >
+                    <option value="" :disabled="true" :selected="true">
+                      Pending
+                    </option>
+                    <option value="approved">Approve</option>
+                    <option value="disapproved">Disapprove</option>
+                  </select>
+                  <span
+                    class="student-address-span"
+                    v-if="i.evaluated !== 'pending' && !i.loading"
+                    >{{ i.evaluated }}</span
+                  >
+                </td>
               </tr>
-              <tr v-if="created_student_list.length === 0 && isLoading">
+              <tr v-if="isLoading">
                 <td colspan="5" class="text-center">Loading...</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="card-footer" v-if="created_student_list.length > 0">
+        <div class="card-footer" v-if="auth_personnel_list.length > 0">
           <span
             class="text-center mb-2"
             style="display: block"
@@ -128,17 +144,17 @@
           />
         </div>
       </div>
-      <NoDataFound v-if="!isLoading && created_student_list.length === 0" />
+      <NoDataFound v-if="!isLoading && auth_personnel_list.length === 0" />
     </div>
   </div>
 </template>
 
 <script>
-import QRCode from "qrcode";
 export default {
+  props: [],
   data: () => ({
-    created_student_list: [],
-    search_value: null,
+    auth_personnel_list: [],
+    id_value: "",
     isLoading: false,
     isSearchLoading: false,
     pages: 0,
@@ -170,32 +186,59 @@ export default {
   },
 
   methods: {
-    searchStudentIdNum() {
-      if (this.search_value) {
-        this.getGeneratedCode();
-      }
-    },
-
-    onSearchInput() {
-      if (!this.search_value) {
-        this.getGeneratedCode();
-      }
-    },
+    searchStudentIdNum() {},
 
     getPaginateList(page) {
       this.getGeneratedCode(page);
     },
 
-    viewStudentInfo(i) {
+    viewPersonnelInfo(i) {
       this.$router.push({
-        name: "admin-dashboard-students-student_id-view",
+        name: "admin-dashboard-personnels-personnel_id-view",
         params: {
-          student_id: i.school_id,
-        },
-        query: {
-          tab: "information",
+          personnel_id: i.company_id,
         },
       });
+    },
+
+    async changeAccountStatus(e, item, key) {
+      let value = e.target.value;
+      this.auth_personnel_list[key].loading = true;
+
+      // toastr.options = {
+      //   "positionClass": "toast-top-right",
+      //   "hideDuration": "1000",
+      //   "timeOut": "2000",
+      // }
+      if (["approved", "disapproved"].indexOf(value) === -1) {
+        toastr.error("Invalid selected status!");
+        return;
+      }
+
+      let payload = {
+        company_id: item.company_id,
+        admin_id: this.$store.state?.user?.id || null,
+        status: value,
+      };
+      try {
+        const { status, data } = await this.$store.dispatch(
+          `Account/ChangeAccountStatus`,
+          payload
+        );
+        console.log("status", status);
+        console.log("data", data);
+        if (status === 200) {
+          toastr.success(data);
+          this.auth_personnel_list[key].evaluated = value;
+        } else {
+          toastr.error(data);
+        }
+        this.auth_personnel_list[key].loading = false;
+      } catch (error) {
+        toastr.error(error.response || "Error for changing account status!");
+        this.auth_personnel_list[key].loading = false;
+        console.log("error", error);
+      }
     },
 
     async getGeneratedCode(page = 1) {
@@ -204,14 +247,9 @@ export default {
         const payload = {
           page: page,
           per_page: this.per_page,
-          account_id: this.$store.state.userAccount.id,
         };
-
-        if (this.search_value) {
-          payload.search = this.search_value;
-        }
         const { status, data } = await this.$store.dispatch(
-          `Student/CreatedStudentList`,
+          `Account/AuthPersonnelList`,
           payload
         );
         console.log("status", status);
@@ -219,36 +257,29 @@ export default {
         if ([200, 201].indexOf(status) > -1) {
           let filteredList = await Promise.all(
             data.data.map(async (i) => {
-              try {
-                let student_qrcode = await QRCode.toDataURL(i.school_id);
-                return {
-                  ...i,
-                  student_qrcode: student_qrcode,
-                  student_name: `${i.first_name} ${i.middle_name} ${i.last_name}`,
-                  address: `${i.street ? i.street + ", " : ""}${
-                    i.barangay ? i.barangay + ", " : ""
-                  }${i.city}, ${i.province} ${i.region}`,
-                };
-              } catch (err) {
-                return {
-                  ...i,
-                  student_qrcode: null,
-                  student_name: `${i.first_name} ${i.middle_name} ${i.last_name}`,
-                  address: `${i.street ? i.street + ", " : ""}${
-                    i.barangay ? i.barangay + ", " : ""
-                  }${i.city}, ${i.province}, ${i.region}`,
-                };
-              }
+              let add = i.office_details || {};
+              return {
+                ...i,
+                loading: false,
+                personnel_name: `${i.first_name} ${i.middle_name} ${i.last_name}`,
+                office_name: `${i.office_details?.office_name || null}`,
+                office_reg_id: `${
+                  i.office_details?.office_registration_id || null
+                }`,
+                office_address: `${add.street ? add.street + ", " : ""}${
+                  add.barangay ? add.barangay + ", " : ""
+                }${add.city || ""}, ${add.province || ""}, ${add.region || ""}`,
+                evaluated:
+                  i.evaluated === null
+                    ? "pending"
+                    : i.evaluated?.action_perform?.toLowerCase() || "pending",
+              };
             })
           );
           console.log("filteredList", filteredList);
-          this.created_student_list = filteredList;
+          this.auth_personnel_list = filteredList;
           this.pages = data.last_page;
           this.page = page;
-        } else {
-          this.created_student_list = [];
-          this.pages = 0;
-          this.page = 0;
         }
         this.isLoading = false;
       } catch (error) {
@@ -257,7 +288,7 @@ export default {
     },
 
     copyItem(key) {
-      // this.created_student_list.splice(key, 1);
+      // this.auth_personnel_list.splice(key, 1);
     },
   },
 
@@ -272,7 +303,7 @@ export default {
     //     console.log("status load socket", status);
     //     console.log("data load socket", data);
     //     if ([200, 201].indexOf(status) > -1) {
-    //       this.created_student_list = data.data;
+    //       this.auth_personnel_list = data.data;
     //       this.pages = data.last_page;
     //       this.page = page;
     //     }
@@ -302,7 +333,7 @@ export default {
   border-radius: 3px;
   font-size: 11px;
   font-weight: 700;
-  line-height: 1;
+  /* line-height: 1; */
   text-transform: uppercase;
   vertical-align: baseline;
 }

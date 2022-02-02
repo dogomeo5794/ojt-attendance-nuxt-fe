@@ -1,39 +1,39 @@
 <template>
-  <div class="hold-transition layout-top-nav">
-    <div class="wrapper">
-      <nav
-        class="main-header navbar navbar-expand-md navbar-light navbar-white"
-      >
-        <div class="container">
-          <span class="navbar-brand">
-            <img
-              src="/img/AdminLTELogo.png"
-              alt="AdminLTE Logo"
-              class="brand-image img-circle elevation-3"
-              style="opacity: 0.8"
-            />
-            <span class="brand-text font-weight-light">
-              Authorized Personnel Registration
-            </span>
+  <div class="wrapper">
+    <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+      <div class="container">
+        <span class="navbar-brand">
+          <img
+            src="/img/AdminLTELogo.png"
+            alt="AdminLTE Logo"
+            class="brand-image img-circle elevation-3"
+            style="opacity: 0.8"
+          />
+          <span class="brand-text font-weight-light">
+            {{ getTitle }}
           </span>
-        </div>
-      </nav>
-      <div class="content-wrapper">
-        <Nuxt />
+        </span>
       </div>
+    </nav>
+    <div class="content-wrapper">
+      <Nuxt />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 export default {
+  middleware: ["unauth"],
   name: "dashboard-layout",
   props: [],
 
   computed: {
     getTitle() {
-      return this.$route?.meta?.label || "";
+      let titleList = {
+        "my-attendance": "Attendance Records",
+      };
+      let name = this.$route.name?.toLowerCase() || "";
+      return titleList[name] || "Authorized Personnel Registration";
     },
   },
 

@@ -11,6 +11,13 @@ export const actions = {
     return serialize(err ? err.response : data);
   },
 
+  async UpdateStudent(ctx, payload) {
+    const [err, data] = await to(
+      this.$axios.post(`${prefix}/update-student`, payload)
+    );
+    return serialize(err ? err.response : data);
+  },
+
   async CreatedStudentList(ctx, payload) {
     const [err, data] = await to(
       this.$axios.get(`${prefix}/created-student-list`, { params: payload })

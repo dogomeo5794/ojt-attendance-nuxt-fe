@@ -1,362 +1,342 @@
 <template>
   <div class="content">
-    <div class="container pt-5 pb-2">
-      <form id="create-account-form">
-        <div class="row">
-          <div class="col-sm-4 col-md-3 col-lg-3">
-            <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <div class="text-center" style="position: relative">
-                  <p class="text-muted text-center" style="font-size: 11px">
-                    <i>** Uploaded Profile Picture **</i>
-                  </p>
-                  <img
-                    id="user-pp"
-                    class="profile-user-img img-fluid img-circle"
-                    src="/img/icons/avatar.jpg"
-                    alt="User profile picture"
-                    style="
-                      border-radius: 0;
-                      width: 100%;
-                      border: 2px solid #adb5bd;
-                    "
-                  />
-                </div>
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-sm-4 col-md-3 col-lg-3">
+              <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
+                  <div class="text-center" style="position: relative">
+                    <p class="text-muted text-center" style="font-size: 11px">
+                      <i>** Uploaded Profile Picture **</i>
+                    </p>
+                    <img
+                      id="user-pp"
+                      class="profile-user-img img-fluid img-circle"
+                      src="/img/icons/avatar.jpg"
+                      alt="User profile picture"
+                      style="
+                        border-radius: 0;
+                        width: 100%;
+                        border: 2px solid #adb5bd;
+                      "
+                    />
+                  </div>
 
-                <p class="text-muted text-center mt-3">ID: RRD-2021-001</p>
+                  <p class="text-muted text-center mt-3">
+                    ID: {{ student.school_id || "---" }}
+                  </p>
+
+                  <button
+                    type="button"
+                    class="btn btn-xs btn-default btn-block btn-flat button-upload mt-1"
+                    @click="viewQRCode"
+                  >
+                    <i class="fas fa-qrcode"></i> View QR Code
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="form-group mb-3">
-              <span class="form-control" style="height: auto">
-                Ronald R. Dogomeo
-              </span>
-              <label class="bottom-label" v-show="true"> Full Name </label>
-            </div>
+            <div class="col-sm-8 col-md-9 col-lg-9">
+              <div class="text-muted">
+                <hr class="mb-4" />
+                <div class="pl-lg-4 pl-sm-2">
+                  <h6 class="heading-small text-muted mb-4">
+                    <span class="badge badge-primary">Student Details</span>
+                  </h6>
+                  <div class="row">
+                    <div class="col-6">
+                      <p class="text-sm">
+                        Full Name
+                        <b class="d-block">
+                          {{ student.first_name || "---" }}
+                          {{ student.last_name || "---" }}
+                        </b>
+                      </p>
+                    </div>
+                    <div class="col-6">
+                      <p class="text-sm">
+                        Course / Year - Section
+                        <b class="d-block">
+                          {{ student.course_name || "---" }} /
+                          {{ student.year_level || "---" }} -
+                          {{ student.section || "---" }}
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="text-sm">
+                        Address
+                        <b class="d-block">
+                          {{ student.street ? student.street + ", " : "" }}
+                          {{ student.barangay ? student.barangay + ", " : "" }}
+                          {{ student.city ? student.city + ", " : "" }}
+                          {{ student.province ? student.province + ", " : "" }}
+                          {{ student.region ? student.region : "" }}
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-            <div class="form-group mb-3">
-              <span class="form-control" style="height: auto">
-                Toboso, Neg. Occ. Phil.
-              </span>
-              <label class="bottom-label" v-show="true"> Address </label>
-            </div>
+                <hr class="my-4" />
+                <div class="pl-lg-4 pl-sm-2">
+                  <h6 class="heading-small text-muted mb-4">
+                    <span class="badge badge-primary">Office Details</span>
+                  </h6>
 
-            <div class="form-group mb-3">
-              <span class="form-control" style="height: auto">
-                BSIT / 3rd - A
-              </span>
-              <label class="bottom-label" v-show="true">
-                Course / Year - Section
-              </label>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="text-sm">
+                        OJT Office
+                        <b class="d-block">
+                          {{ office.office_name || "---" }}
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="text-sm">
+                        OJT Office Address
+                        <b class="d-block">
+                          {{ office.street ? office.street + ", " : "" }}
+                          {{ office.barangay ? office.barangay + ", " : "" }}
+                          {{ office.city ? office.city + ", " : "" }}
+                          {{ office.province ? office.province + ", " : "" }}
+                          {{ office.region ? office.region : "" }}
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <div class="form-group mb-3">
-              <span class="form-control" style="height: auto"> SAMPLE </span>
-              <label class="bottom-label" v-show="true"> OJT Office </label>
-            </div>
+        <div class="col-sm-12">
+          <hr class="my-4" />
+          <h6 class="heading-small text-muted mb-4">
+            <span class="badge badge-primary">Attendance Records</span>
+          </h6>
+          <div class="card">
+            <!-- <div class="card-header">
+            <h3 class="card-title">
+              <span class="badge badge-primary">Attendance Records</span>
+            </h3>
+          </div> -->
+            <div class="card-body p-0 table-responsive">
+              <table
+                class="table table-sm table-bordered table-head-fixed text-nowrap"
+                style="table-layout: fixed"
+              >
+                <thead>
+                  <tr>
+                    <th class="text-center text-sm" style="width: 140px"></th>
+                    <th
+                      class="text-center text-sm"
+                      colspan="2"
+                      style="width: 200px"
+                    >
+                      AM
+                    </th>
+                    <th
+                      class="text-center text-sm"
+                      colspan="2"
+                      style="width: 200px"
+                    >
+                      PM
+                    </th>
+                    <th class="text-center text-sm" style="width: 120px"></th>
+                  </tr>
+                  <tr>
+                    <th
+                      class="text-center text-sm"
+                      style="vertical-align: middle"
+                    >
+                      Date
+                    </th>
+                    <th class="text-center text-sm">In</th>
+                    <th class="text-center text-sm">Out</th>
+                    <th class="text-center text-sm">In</th>
+                    <th class="text-center text-sm">Out</th>
+                    <th
+                      class="text-center text-sm"
+                      style="vertical-align: middle"
+                    >
+                      Total Hours
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="attendance.length === 0">
+                    <td colspan="6" class="text-center">
+                      <i class="fas fa-exclamation-triangle"></i>
+                      No data found!
+                    </td>
+                  </tr>
+                  <tr v-for="(i, k) in attendance" :key="k">
+                    <td class="text-left">
+                      {{ toDateOnly(i.attendance_date) || "---" }}
+                    </td>
+                    <td class="text-center">
+                      {{ toTimeOnly(i.time_in_am) || "---" }}
+                    </td>
+                    <td class="text-center">
+                      {{ toTimeOnly(i.time_in_pm) || "---" }}
+                    </td>
+                    <td class="text-center">
+                      {{ toTimeOnly(i.time_out_am) || "---" }}
+                    </td>
+                    <td class="text-center">
+                      {{ toTimeOnly(i.time_out_pm) || "---" }}
+                    </td>
+                    <td class="text-right">{{ k }}</td>
+                  </tr>
 
-            <div class="form-group mb-3">
-              <span class="form-control" style="height: auto">
-                Sample sample sample
-              </span>
-              <label class="bottom-label" v-show="true">
-                OJT Office Address
-              </label>
+                  <tr v-if="attendance.length > 0">
+                    <!-- <td>
+                    Page:
+                    <select style="padding: 0 5px" name="page">
+                      <option value="">1</option>
+                      <option value="">2</option>
+                      <option value="">3</option>
+                    </select>
+                  </td> -->
+                    <td colspan="5" class="text-center">Total</td>
+                    <td class="text-right">00:00</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
-          <div class="col-sm-8 col-md-9 col-lg-9">
-            <div class="card">
-              <!-- <div class="card card-danger card-outline"> -->
-              <div class="card-header">
-                <h3 class="card-title">Attendance Records</h3>
-              </div>
-              <div class="card-body p-0 table-responsive">
-                <table
-                  class="table table-sm table-bordered table-head-fixed text-nowrap"
-                  style="table-layout: fixed"
-                >
-                  <thead>
-                    <tr>
-                      <th class="text-center text-sm" style="width: 140px"></th>
-                      <th
-                        class="text-center text-sm"
-                        colspan="2"
-                        style="width: 200px"
-                      >
-                        AM
-                      </th>
-                      <th
-                        class="text-center text-sm"
-                        colspan="2"
-                        style="width: 200px"
-                      >
-                        PM
-                      </th>
-                      <th class="text-center text-sm" style="width: 120px"></th>
-                    </tr>
-                    <tr>
-                      <th
-                        class="text-center text-sm"
-                        style="vertical-align: middle"
-                      >
-                        Date
-                      </th>
-                      <th class="text-center text-sm">In</th>
-                      <th class="text-center text-sm">Out</th>
-                      <th class="text-center text-sm">In</th>
-                      <th class="text-center text-sm">Out</th>
-                      <th
-                        class="text-center text-sm"
-                        style="vertical-align: middle"
-                      >
-                        Total Hours
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(item, key) in [
-                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8,
-                        9, 10,
-                      ]"
-                      :key="key"
-                    >
-                      <td class="text-left">9/21/2021</td>
-                      <td class="text-center">8:00 AM</td>
-                      <td class="text-center">11:30 AM</td>
-                      <td class="text-center">1:00 PM</td>
-                      <td class="text-center">5:30 PM</td>
-                      <td class="text-right">{{ key }}</td>
-                    </tr>
+          <div class="text-right">
+            <button
+              class="btn btn-outline-danger"
+              @click="$router.push({ name: 'login' })"
+            >
+              <i class="fas fa-times"></i> Close
+            </button>
 
-                    <tr>
-                      <td colspan="5" class="text-right">Total</td>
-                      <td class="text-right">00:00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <button
+              class="btn btn-outline-primary"
+              @click="$router.push({ name: 'verify-id' })"
+            >
+              <i class="fas fa-qrcode"></i> Re-scan
+            </button>
 
-            <button class="btn btn-outline-success float-right">
+            <button class="btn btn-outline-success">
               <i class="fas fa-file-excel"></i> Export
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import phil from "phil-reg-prov-mun-brgy";
 export default {
   data: () => ({
     isLoading: false,
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    birthday: "",
-    contact_no: "",
-    email: "",
 
-    password: "",
-
-    region: "",
-    regionList: [],
-    province: "",
-    provinceList: [],
-    city: "",
-    cityList: [],
-    barangay: "",
-    barangayList: [],
-    street: "",
-
-    company_id: "",
-    user_group: "admin",
-
-    token: "",
-    unique_key: "",
-    reference_id: "",
+    attendance: [],
+    student: {},
+    office: [],
   }),
 
-  watch: {
-    async region(newVal) {
-      this.province = "";
-      this.provinceList = await phil.getProvincesByRegion(newVal.reg_code);
-      console.log("this.cityList", this.provinceList);
-      this.$nextTick(() =>
-        $(`[name="province"]`)
-          .selectpicker("refresh")
-          .change(function () {
-            let el = $(this).closest(".dropdown.bootstrap-select.v_spicker");
-            $(this).valid() ? el.removeClass("is-invalid") : "";
-          })
-      );
-    },
-    async province(newVal) {
-      this.city = "";
-      this.cityList = await phil.getCityMunByProvince(newVal.prov_code);
-      console.log("this.cityList", this.cityList);
-      this.$nextTick(() =>
-        $(`[name="city"]`)
-          .selectpicker("refresh")
-          .change(function () {
-            let el = $(this).closest(".dropdown.bootstrap-select.v_spicker");
-            $(this).valid() ? el.removeClass("is-invalid") : "";
-          })
-      );
-    },
-    async city(newVal) {
-      this.barangay = "";
-      this.barangayList = await phil.getBarangayByMun(newVal.mun_code);
-      this.$nextTick(() =>
-        $(`[name="barangay"]`)
-          .selectpicker("refresh")
-          .change(function () {
-            let el = $(this).closest(".dropdown.bootstrap-select.v_spicker");
-            $(this).valid() ? el.removeClass("is-invalid") : "";
-          })
-      );
-    },
-  },
+  props: ["student_id"],
 
   computed: {
-    ...mapGetters({
-      baseUrl: "getBaseUrl",
-      assetUrl: "getAssetUrl",
-      session: "getSession",
-    }),
+    toDateOnly() {
+      return (d) => {
+        return d ? this.$moment(new Date(d)).format("MM/DD/YYYY") : null;
+      };
+    },
+    toTimeOnly() {
+      return (d) => {
+        return d ? this.$moment(new Date(d)).format("hh:mm A") : null;
+      };
+    },
   },
 
   mounted() {
-    console.log("route", this.$route);
-
-    let key = this.$route?.query?.uid || "";
-    let rid = this.$route?.query?.rid || "";
-    // if (key !== 'uamadmin-unique-2021-001' && rid !== 'ojt-team-2021-001') {
-    //   this.$router.push({
-    //     name: "Page Not Found"
-    //   })
-    //   return;
-    // }
-
-    this.token = this.$route?.query?.token || "";
-    this.unique_key = this.$route?.query?.uid || "";
-    this.reference_id = this.$route?.query?.rid || "";
-
-    this.regionList = phil.regions;
-    this.$nextTick(() => {
-      $(`.selectpicker, [name="region"]`)
-        .selectpicker("refresh")
-        .change(function () {
-          let el = $(this).closest(".dropdown.bootstrap-select.v_spicker");
-          $(this).valid() ? el.removeClass("is-invalid") : "";
-        });
-
-      $(`[name="birthday"]`).change(function () {
-        $(this).valid();
-      });
-    });
+    this.getStudentByID();
   },
 
   methods: {
-    validateForm() {},
+    downloadQRCode(base64) {
+      let fileDownload = require("js-file-download");
+      const BASE64_MARKER = ";base64,";
+      const parts = base64.split(BASE64_MARKER);
+      const contentType = parts[0].split(":")[1];
+      const raw = window.atob(parts[1]);
+      const rawLength = raw.length;
+      const uInt8Array = new Uint8Array(rawLength);
 
-    submitAccount() {
-      const valid = this.validateForm();
-      if (this.isLoading === true || !valid) return;
-      this.isLoading = true;
-      let address = [this.barangay, this.city, this.province, this.region];
-      let payload = {
-        company_id: this.company_id,
-        first_name: this.first_name,
-        middle_name: this.middle_name,
-        last_name: this.last_name,
-        birthday: this.birthday,
-        contact_no: this.contact_no,
-        email: this.email,
-        address: `${this.street ? this.street + ", " : ""}${address
-          .map((item) => item.name)
-          .join(", ")}`,
-        role: "uam-admin",
-        user_group: this.user_group,
-        password: this.password,
-        password_confirmation: this.password, //this.confirmPassword,
-        _token: this._token,
-        unique_key: this.unique_key,
-        reference_id: this.reference_id,
-      };
+      for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+      }
 
-      console.log("payload", payload);
+      let extParts = "image/png".split("/");
+      let ext = extParts?.[1] || "png";
 
-      this.$swal
-        .preConfirm({
-          title: `Submit Registration`,
-          text: `Are you sure you want to submit your account registration?`,
-          preConfirm: () => {
-            return this.$store
-              .dispatch("UAM/createStaffAccount", payload)
-              .then((response) => {
-                console.log("response", response);
-                if (response.status !== 200) {
-                  let errors = [];
-                  for (let idx in response.data) {
-                    errors.push(response.data[idx]);
-                  }
-                  this.$swal.showValidationMessage(
-                    `The following error(s) occurred: ${
-                      errors?.[0] ||
-                      response.status + " - Something went wrong."
-                    }`
-                  );
-                }
-              })
-              .catch((error) => {
-                this.$swal.showValidationMessage(
-                  `The following error(s) occurred: ${errors}`
-                );
-              });
-          },
+      const blob = new Blob([uInt8Array], { type: contentType });
+      fileDownload(blob, `qr_code_${this.student_id}.${ext}`);
+    },
+    viewQRCode() {
+      this.$_swal
+        .fire({
+          title: "QR Code",
+          text: "",
+          imageUrl: this.student.qr_code,
+          imageWidth: 400,
+          imageHeight: 400,
+          imageAlt: "Student QR Code",
+          showCancelButton: true,
+          confirmButtonText: "Download QR Code",
+          confirmButtonColor: "#b2ad7f",
+          cancelButtonText: "Close",
         })
         .then((result) => {
-          this.isLoading = false;
-          if (!result.isConfirmed) return;
-          this.$swal
-            .success({
-              text: "Your account was successfully created. Go to the login page to Sign in to your account",
-            })
-            .then(({ isConfirmed }) => {
-              this.$router.push({
-                name: "uam-login",
-              });
-            });
+          if (result.isConfirmed) {
+            this.downloadQRCode(this.student.qr_code);
+          }
         });
     },
-
-    confirmedSaveAccount(payload) {
+    async getStudentByID() {
       this.isLoading = true;
+      const payload = {
+        school_id: this.student_id,
+      };
+      try {
+        const { status, data } = await this.$store.dispatch(
+          `Student/CollectStudentInfo`,
+          payload
+        );
+        console.log("status", status);
+        console.log("data", data);
+        if ([200, 201].indexOf(status) > -1) {
+          this.attendance = data.attendance_list || [];
+          // this.office = data?.office?.[0] || {};
+          this.office = data.office.find(
+            (i) => i.pivot.duty_status === "active"
+          );
+          delete data.attendance_list;
+          delete data.office;
+          this.student = data || {};
+        }
+        this.$nextTick(() => (this.isLoading = false));
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
-  },
-
-  beforeMount() {
-    document.body.className = "";
-    document.body.classList.add("hold-transition", "layout-top-nav");
-    // document.body.style = "";
-    // document.body.style = "min-height: 272.76px";
   },
 };
 </script>
-
-<style scoped>
-.bottom-label {
-  display: block;
-  width: 100%;
-  /* margin-top: .25rem; */
-  font-size: 11px;
-  color: #948f8f;
-  font-style: italic;
-}
-</style>

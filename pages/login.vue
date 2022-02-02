@@ -152,11 +152,18 @@ export default {
         if ([200, 201].indexOf(status) > -1) {
           localStorage.setItem("_token", data.access_token);
           localStorage.setItem("_user_logged", JSON.stringify(data.user));
-          this.$store.commit("setUserAccount", data?.user?.account || null);
-          delete data.user.account;
-          this.$store.commit("setUser", data.user);
-          this.$router.push({
-            name: "personnel",
+          this.$nextTick(() => {
+            this.$store.commit("setUserAccount", data?.user?.account || {});
+            this.$store.commit("setIsLogged", true);
+            delete data.user.account;
+            this.$store.commit("setUser", data.user || {});
+            console.log("set is_logged");
+            this.$nextTick(() => {
+              console.log("login set is_logged", this.$store.state.isLogged);
+              this.$router.push({
+                name: "personnel",
+              });
+            });
           });
           this.isLoading = false;
           this.loginError = {

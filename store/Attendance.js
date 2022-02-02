@@ -17,4 +17,11 @@ export const actions = {
     );
     return serialize(err ? err.response : data);
   },
+
+  async validateQRCode(ctx, payload) {
+    const [err, data] = await to(
+      this.$axios.post(`${prefix}/validate-qrcode`, payload)
+    );
+    return serialize(err ? err.response : data);
+  },
 };

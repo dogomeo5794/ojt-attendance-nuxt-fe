@@ -1,5 +1,5 @@
 <template>
-  <AdminStudentsCreate />
+  <AdminPersonnelsList />
 </template>
 
 <script>

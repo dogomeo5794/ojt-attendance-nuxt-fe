@@ -79,9 +79,10 @@ export default {
     "~/plugins/Validation",
     "~/plugins/Pagination",
     "~/plugins/Swal",
+    "~/plugins/VuePlugins",
   ],
 
-  modules: ["@nuxtjs/axios"],
+  modules: ["@nuxtjs/axios", "nuxt-route-meta"],
 
   axios: {
     baseURL: `${process.env.NUXT_API_URL}`,

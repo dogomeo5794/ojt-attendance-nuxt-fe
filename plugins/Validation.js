@@ -2,7 +2,17 @@ import Vue from "vue";
 import moment from "moment";
 
 import { extend, ValidationObserver, ValidationProvider } from "vee-validate";
-import { required, email, max, min, alpha, numeric, regex, min_value, confirmed } from "vee-validate/dist/rules";
+import {
+  required,
+  email,
+  max,
+  min,
+  alpha,
+  numeric,
+  regex,
+  min_value,
+  confirmed,
+} from "vee-validate/dist/rules";
 
 // No message specified.
 extend("email", {
@@ -46,97 +56,88 @@ extend("min_value", {
   message: "value must not less than {min}",
 });
 
-extend('fromToErr', {
-  params: ['str'],
+extend("fromToErr", {
+  params: ["str"],
   validate(value, { str }) {
-    return (/[a-z]/.test(value));
+    return /[a-z]/.test(value);
   },
   message: "Year from must not be ahead of Year to",
 });
 
-extend('startEndErr', {
-  params: ['str'],
+extend("startEndErr", {
+  params: ["str"],
   validate(value, { str }) {
-    return (/[a-z]/.test(value));
+    return /[a-z]/.test(value);
   },
   message: "Start Training must not be ahead of End Training",
 });
-
 
 extend("confirmed", {
   ...confirmed,
   message: "Password not match.",
 });
 
-extend('max_date', {
+extend("max_date", {
   validate: (value, { min }) => {
     let max = moment(new Date(value)).format("YYYY-MM-DD");
     let now = moment().format("YYYY-MM-DD");
     let invalidYear = moment(new Date(value)).format("YYYY");
     return now >= max && Number(invalidYear) > 1950;
   },
-  params: ['min'],
-  message: 'Invalid Date'
+  params: ["min"],
+  message: "Invalid Date",
 });
 
-extend('min_date', {
+extend("min_date", {
   validate: (value, { max }) => {
     let min = moment(new Date(value)).format("YYYY-MM-DD");
     let now = moment().format("YYYY-MM-DD");
     let invalidYear = moment(new Date(value)).format("YYYY");
     return now <= min && Number(invalidYear) > 1950;
   },
-  params: ['max'],
-  message: 'Invalid Date'
+  params: ["max"],
+  message: "Invalid Date",
 });
 
-extend('hasLowerCase', {
-  params: ['str'],
+extend("hasLowerCase", {
+  params: ["str"],
   validate(value, { str }) {
-    return (/[a-z]/.test(value));
+    return /[a-z]/.test(value);
   },
   message: "Must contain lowercase",
 });
 
-extend('hasUpperCase', {
-  params: ['str'],
+extend("hasUpperCase", {
+  params: ["str"],
   validate(value, { str }) {
-    return (/[A-Z]/.test(value));
+    return /[A-Z]/.test(value);
   },
   message: "Must contain uppercase",
-})
+});
 
-extend('hasSpecialChar', {
-  params: ['str'],
+extend("hasSpecialChar", {
+  params: ["str"],
   validate(value, { str }) {
-    return (/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(value));
+    return /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(value);
   },
   message: "Must contain special char",
-})
+});
 
-extend('hasNumber', {
-  params: ['str'],
+extend("hasNumber", {
+  params: ["str"],
   validate(value, { str }) {
-    return (/[0-9]/.test(value));
+    return /[0-9]/.test(value);
   },
   message: "Must contain number",
-})
+});
 
-extend('unique_email', {
-  params: ['str'],
-  validate(value, { str }) {
-    
-    // this.$store
-    // .dispatch("Users/isEmailExist", value)
-    // .then(({ data, status }) => {
-    //   console.log(data);
-    // });
-    // // return (/[0-9]/.test(value));
+extend("password", {
+  params: ["target"],
+  validate(value, { target }) {
+    return value === target;
   },
-  message: "Email already exist",
-})
-
-
+  message: "Password confirmation does not match",
+});
 
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);

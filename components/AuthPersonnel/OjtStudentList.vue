@@ -171,14 +171,15 @@ export default {
     },
 
     async getGeneratedCode(page = 1) {
-      console.log("session", this.session);
       this.isLoading = true;
       try {
         const payload = {
           page: page,
           per_page: this.per_page,
-          company_id: this.session?.company_id || null,
+          account_id: this.$store.state.userAccount.id,
+          office_id: this.$store.state.user.office_detail_id,
         };
+        console.log("payload", payload);
         const { status, data } = await this.$store.dispatch(
           `Student/CreatedStudentList`,
           payload

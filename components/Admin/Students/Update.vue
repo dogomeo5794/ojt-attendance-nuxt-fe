@@ -1,5 +1,7 @@
 <template>
-  <ValidationObserver ref="form">
+  <h5 class="text-center" v-if="isLoading">Loading....</h5>
+  <NoDataFound v-else-if="!isLoading && respStatusCode === 404" />
+  <ValidationObserver ref="form" v-else>
     <div class="row">
       <div class="col-sm-4 col-md-3 col-lg-3">
         <div class="card card-primary card-outline">
@@ -83,27 +85,12 @@
           <div class="card-body">
             <div class="row">
               <div class="col-lg-6">
-                <ValidationProvider
-                  :rules="{ required: true }"
-                  v-slot="{ errors, failed }"
-                  name="student_id"
-                  slim
-                >
-                  <div class="form-group">
-                    <label>Student ID</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      :class="{ 'is-invalid': failed }"
-                      placeholder="Student ID"
-                      name="student_id"
-                      v-model="student_id"
-                    />
-                    <label class="error invalid-feedback" v-if="failed">
-                      {{ errors[0] }}
-                    </label>
-                  </div>
-                </ValidationProvider>
+                <div class="form-group" style="opacity: 0.5">
+                  <label>Student ID</label>
+                  <span class="form-control" style="height: auto">{{
+                    school_id || "---"
+                  }}</span>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -329,27 +316,12 @@
                 </ValidationProvider>
               </div>
               <div class="col-lg-4">
-                <ValidationProvider
-                  :rules="{ required: true, email: true }"
-                  v-slot="{ errors, failed }"
-                  name="email"
-                  slim
-                >
-                  <div class="form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      class="form-control"
-                      :class="{ 'is-invalid': failed }"
-                      placeholder="Enter email"
-                      name="email"
-                      v-model="email"
-                    />
-                    <label class="error invalid-feedback" v-if="failed">
-                      {{ errors[0] }}
-                    </label>
-                  </div>
-                </ValidationProvider>
+                <div class="form-group" style="opacity: 0.5">
+                  <label>Email</label>
+                  <span class="form-control" style="height: auto">
+                    {{ email || "---" }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -365,10 +337,68 @@
               >
                 Student Address
               </span>
+              |
+              <a
+                href="#"
+                class="btn-link text-sm"
+                :class="{ 'text-danger': is_update_address }"
+                @click.prevent="is_update_address = !is_update_address"
+              >
+                <i
+                  :class="`fas ${is_update_address ? 'fa-times' : 'fa-edit'}`"
+                ></i>
+                {{ is_update_address ? "Cancel update" : "Update" }}
+              </a>
             </h3>
           </div>
           <div class="card-body">
-            <div class="row">
+            <div class="row" v-if="!is_update_address">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Region</label>
+                  <span class="form-control" style="height: auto">
+                    {{ old_region || "---" }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Province</label>
+                  <span class="form-control" style="height: auto">
+                    {{ old_province || "---" }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>City</label>
+                  <span class="form-control" style="height: auto">
+                    {{ old_city || "---" }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label>Barangay</label>
+                  <span class="form-control" style="height: auto">
+                    {{ old_barangay || "---" }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label>Household/Street</label>
+                  <span class="form-control" style="height: auto">
+                    {{ old_street || "---" }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row" v-else>
               <div class="col-lg-6">
                 <ValidationProvider
                   :rules="{ required: true }"
@@ -462,22 +492,37 @@
                 </ValidationProvider>
               </div>
               <div class="col-lg-6">
-                <div class="form-group">
-                  <label>Barangay</label>
-                  <select
-                    name="barangay"
-                    class="selectpicker"
-                    data-width="100%"
-                    data-style="btn-default"
-                    data-live-search="true"
-                    data-size="5"
-                    v-model="barangay"
-                  >
-                    <option v-for="(i, k) in barangayList" :key="k" :value="i">
-                      {{ i.name }}
-                    </option>
-                  </select>
-                </div>
+                <ValidationProvider
+                  :rules="{ required: false }"
+                  v-slot="{ errors, failed }"
+                  name="barangay"
+                  slim
+                >
+                  <div class="form-group">
+                    <label>Barangay</label>
+                    <select
+                      name="barangay"
+                      class="selectpicker"
+                      :class="{ 'is-invalid': failed }"
+                      data-width="100%"
+                      data-style="btn-default"
+                      data-live-search="true"
+                      data-size="5"
+                      v-model="barangay"
+                    >
+                      <option
+                        v-for="(i, k) in barangayList"
+                        :key="k"
+                        :value="i"
+                      >
+                        {{ i.name }}
+                      </option>
+                    </select>
+                    <label class="error invalid-label" v-if="failed">
+                      {{ errors[0] }}
+                    </label>
+                  </div>
+                </ValidationProvider>
               </div>
               <div class="col-lg-12">
                 <ValidationProvider
@@ -519,7 +564,7 @@
               :style="`${isLoading ? 'pointer-events: none' : ''}`"
             >
               <i class="fas fa-check-circle"></i>
-              Save Created Student
+              Save changes information
             </button>
           </div>
         </div>
@@ -534,28 +579,41 @@ import QRCode from "qrcode";
 export default {
   data: () => ({
     isLoading: false,
+
+    regionList: [],
+    provinceList: [],
+    cityList: [],
+    barangayList: [],
+
+    respStatusCode: null,
+    qr_code: "",
+    office: [],
+    barangay: "",
+    birthday: "",
+    city: "",
+    contact_no: "",
     course_code: "",
     course_name: "",
-    section: "",
-    year_level: "",
-    student_id: "",
-    qr_code: "",
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    birthday: "",
-    contact_no: "",
+    created_at: "",
     email: "",
-
-    region: "",
-    regionList: [],
+    first_name: "",
+    id: "",
+    last_name: "",
+    middle_name: "",
     province: "",
-    provinceList: [],
-    city: "",
-    cityList: [],
-    barangay: "",
-    barangayList: [],
+    region: "",
+    school_id: "",
+    section: "",
     street: "",
+    updated_at: "",
+    year_level: "",
+
+    is_update_address: false,
+    old_barangay: "",
+    old_city: "",
+    old_province: "",
+    old_region: "",
+    old_street: "",
 
     profile: null,
   }),
@@ -579,23 +637,26 @@ export default {
       this.$nextTick(() => $(`[name="barangay"]`).selectpicker("refresh"));
     },
 
-    student_id(newVal) {
-      const qr_string = newVal.trim("");
-      if (qr_string === "") {
-        this.qr_code = "";
-        return;
+    school_id(newVal) {
+      if (!newVal) return;
+      this.generateQRCode(newVal);
+    },
+
+    is_update_address(newVal) {
+      if (newVal) {
+        this.$nextTick(() => $(`.selectpicker`).selectpicker("refresh"));
       }
-      this.generateQRCode(qr_string);
     },
   },
 
-  computed: {},
+  computed: {
+    getStudentId() {
+      return this.$route?.params?.student_id || "";
+    },
+  },
 
   mounted() {
-    this.regionList = phil.regions;
-    this.$nextTick(() =>
-      $(`.selectpicker, [name="region"]`).selectpicker("refresh")
-    );
+    this.getStudentInfo();
   },
 
   methods: {
@@ -647,24 +708,54 @@ export default {
         });
     },
 
-    downloadQRCode(base64) {
-      let fileDownload = require("js-file-download");
-      const BASE64_MARKER = ";base64,";
-      const parts = base64.split(BASE64_MARKER);
-      const contentType = parts[0].split(":")[1];
-      const raw = window.atob(parts[1]);
-      const rawLength = raw.length;
-      const uInt8Array = new Uint8Array(rawLength);
+    async getStudentInfo() {
+      this.isLoading = true;
+      try {
+        let payload = {
+          school_id: this.getStudentId,
+        };
+        const { data, status } = await this.$store.dispatch(
+          "Student/CollectStudentInfo",
+          payload
+        );
+        this.respStatusCode = status;
+        if ([200, 201].indexOf(status) > -1) {
+          for (let key in data) {
+            if (
+              ["barangay", "city", "province", "region", "street"].indexOf(
+                key
+              ) > -1
+            ) {
+              this._data[`old_${key}`] = data[key];
+            }
+            this._data[key] = data[key];
+          }
 
-      for (let i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
+          if (data.office.length > 0) {
+            const active_office = data.office.find(
+              (i) => i.pivot.duty_status === "active"
+            );
+            console.log("active_office", active_office);
+            if (!active_office) return;
+            this.office_reg_id = active_office?.office_registration_id || "";
+            this.office_name = active_office?.office_name || "";
+            let i = active_office;
+            this.office_address = `${i.street ? i.street + ", " : ""}${
+              i.barangay ? i.barangay + ", " : ""
+            }${i.city}, ${i.province} ${i.region}`;
+          }
+        }
+        console.log("data", data);
+        console.log("status", status);
+        this.regionList = phil.regions;
+        this.$nextTick(() =>
+          $(`.selectpicker, [name="region"]`).selectpicker("refresh")
+        );
+        this.isLoading = false;
+      } catch (err) {
+        this.isLoading = false;
+        console.log("error", error);
       }
-
-      let extParts = "image/png".split("/");
-      let ext = extParts?.[1] || "png";
-
-      const blob = new Blob([uInt8Array], { type: contentType });
-      fileDownload(blob, `qr_code_${this.student_id}.${ext}`);
     },
 
     resetForm() {
@@ -673,7 +764,7 @@ export default {
       this.course_name = "";
       this.section = "";
       this.year_level = "";
-      this.student_id = "";
+      this.school_id = "";
       this.qr_code = "";
       this.first_name = "";
       this.middle_name = "";
@@ -690,16 +781,14 @@ export default {
       this.barangay = "";
       this.barangayList = [];
       this.street = "";
-      this.profile = null;
 
       this.regionList = phil.regions;
-      this.$nextTick(() => {
-        $(`.selectpicker, [name="region"]`).selectpicker("refresh");
-        this.$refs.form.reset();
-      });
+      this.$nextTick(() =>
+        $(`.selectpicker, [name="region"]`).selectpicker("refresh")
+      );
     },
 
-    async validate() {
+    async validateForm() {
       let valid = await this.$refs.form.validate();
       let err = Object.values(this.$refs.form.fields).find(
         (el) => el.valid === false
@@ -711,7 +800,7 @@ export default {
     },
 
     async submitCreatedStudent() {
-      const valid = await this.validate();
+      const valid = await this.validateForm();
       console.log("valid", valid);
       if (this.isLoading === true || !valid) return;
 
@@ -720,20 +809,25 @@ export default {
         course_name: this.course_name,
         section: this.section,
         year_level: this.year_level,
-        school_id: this.student_id,
+        school_id: this.school_id,
         first_name: this.first_name,
         middle_name: this.middle_name,
         last_name: this.last_name,
         birthday: this.birthday,
         contact_no: this.contact_no,
         email: this.email,
-        region: this.region?.name || "",
-        province: this.province?.name || "",
-        city: this.city?.name || "",
-        barangay: this.barangay?.name || "",
-        street: this.street?.name || "",
-        qr_code: this.qr_code || null,
       };
+
+      if (this.is_update_address) {
+        payload = {
+          ...payload,
+          region: this.region?.name || "",
+          province: this.province?.name || "",
+          city: this.city?.name || "",
+          barangay: this.barangay?.name || "",
+          street: this.street || "",
+        };
+      }
 
       if (this.profile) {
         payload.profile = this.profile;
@@ -743,11 +837,11 @@ export default {
 
       this.$swal
         .preConfirm({
-          title: `Create Student`,
-          text: `Are you sure you want to create student info.?`,
+          title: `Update Information`,
+          text: `Are you sure you want to update student info.?`,
           preConfirm: () => {
             return this.$store
-              .dispatch("Student/CreateStudent", payload)
+              .dispatch("Student/UpdateStudent", payload)
               .then((response) => {
                 console.log("response", response);
                 if (response.status !== 200) {
@@ -765,51 +859,29 @@ export default {
               })
               .catch((error) => {
                 this.$_swal.showValidationMessage(
-                  `The following error(s) occurred: ${error}`
+                  `The following error(s) occurred: ${errors}`
                 );
               });
           },
         })
         .then((result) => {
-          if (!result.isConfirmed) return;
-
           this.$_swal
             .fire({
               title: "Success!",
-              text: "Student information created successfully. Here is the generated QR code for this student.",
-              imageUrl: this.qr_code,
-              imageWidth: 400,
-              imageHeight: 400,
-              imageAlt: "Student generated QR Code",
-              showDenyButton: true,
-              showCancelButton: true,
-              confirmButtonText: "Add New",
-              cancelButtonText: "Download QR Code",
-              cancelButtonColor: "#b2ad7f",
-              denyButtonText: `Student List`,
-              denyButtonColor: "#6b5b95",
+              text: "Student information updated successfully.",
+              icon: "success",
+              confirmButtonText: "OK",
             })
             .then((result) => {
-              if (result.isConfirmed) {
-                this.resetForm();
-              } else if (result.isDenied) {
-                this.$router.push({
-                  name: "admin-dashboard-students",
-                });
-              } else {
-                this.downloadQRCode(this.qr_code);
-                this.$nextTick(() => {
-                  this.$router.push({
-                    name: "admin-dashboard-students-student_id-view",
-                    params: {
-                      student_id: this.student_id,
-                    },
-                    query: {
-                      tab: "information",
-                    },
-                  });
-                });
-              }
+              this.$router.push({
+                name: "admin-dashboard-students-student_id-view",
+                params: {
+                  student_id: this.school_id,
+                },
+                query: {
+                  tab: "information",
+                },
+              });
             });
         });
     },

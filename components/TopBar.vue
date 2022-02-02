@@ -42,8 +42,6 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import Swal from "sweetalert2";
-
 export default {
   data() {
     return {
@@ -62,20 +60,22 @@ export default {
 
   methods: {
     logout() {
-      Swal.fire({
-        title: "About to Logout",
-        text: "Are you sure to logout? All session will reset.",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#dc3545",
-        cancelButtonColor: "grey",
-        confirmButtonText: "Logout",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          localStorage.clear();
-          this.$router.push({ path: "/login" });
-        }
-      });
+      this.$_swal
+        .fire({
+          title: "About to Logout",
+          text: "Are you sure to logout? All session will reset.",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#dc3545",
+          cancelButtonColor: "grey",
+          confirmButtonText: "Logout",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            localStorage.clear();
+            this.$router.push({ path: "/login" });
+          }
+        });
     },
     goBack() {
       this.minimizeSideBar();

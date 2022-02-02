@@ -130,8 +130,8 @@ export default {
         isHeader: false,
         label: "Auth. Person List",
         icon: "fas fa-user-tie",
-        routeName: "personnel-list",
-        routePath: "personnel/list",
+        routeName: "admin-dashboard-personnels",
+        routePath: "/admin-dashboard/personnels",
       },
       {
         isHeader: true,
@@ -193,7 +193,6 @@ export default {
 
   computed: {
     user() {
-      console.log("this.$store.state.user", this.$store.state.user);
       return this.$store.state.user;
     },
     account() {
@@ -207,7 +206,6 @@ export default {
     },
 
     getUserType() {
-      console.log("account xx", this.$store);
       return this.account?.user_type?.toLowerCase() || null;
     },
 
@@ -221,7 +219,6 @@ export default {
     },
 
     getSidebarList() {
-      console.log("getUserType", this.getUserType);
       if (this.getUserType === "authorized-personnel") {
         return this.personnelSidenavLinks;
       } else if (this.getUserType === "admin") {
@@ -243,11 +240,6 @@ export default {
 
     goToDashboard() {
       // this.$router.push({ name: "Home" }).catch(err => {});
-    },
-
-    signOut() {
-      this.$store.commit("setIsLogged", false);
-      window.location.reload();
     },
   },
 };

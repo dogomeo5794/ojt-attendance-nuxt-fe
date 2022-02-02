@@ -1,80 +1,150 @@
 <template>
   <div class="container mb-3">
     <div class="row">
-      <div class="col-sm-4 col-md-3 col-lg-3">
-        <div class="card card-primary card-outline">
-          <div class="card-body box-profile">
-            <div class="text-center" style="position: relative">
-              <p class="text-muted text-center" style="font-size: 11px">
-                <i>** Uploaded Profile Picture **</i>
-              </p>
-              <img
-                id="user-pp"
-                class="profile-user-img img-fluid img-circle"
-                src="/img/icons/avatar.jpg"
-                alt="User profile picture"
-                style="border-radius: 0; width: 100%; border: 2px solid #adb5bd"
-              />
+      <div class="col-12">
+        <div class="row">
+          <div class="col-sm-4 col-md-3 col-lg-3">
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center" style="position: relative">
+                  <p class="text-muted text-center" style="font-size: 11px">
+                    <i>** Uploaded Profile Picture **</i>
+                  </p>
+                  <img
+                    id="user-pp"
+                    class="profile-user-img img-fluid img-circle"
+                    src="/img/icons/avatar.jpg"
+                    alt="User profile picture"
+                    style="
+                      border-radius: 0;
+                      width: 100%;
+                      border: 2px solid #adb5bd;
+                    "
+                  />
+                </div>
+
+                <p class="text-muted text-center mt-3">
+                  ID: {{ student.school_id || "---" }}
+                </p>
+
+                <button
+                  type="button"
+                  class="btn btn-xs btn-default btn-block btn-flat button-upload mt-1"
+                  @click="viewQRCode"
+                >
+                  <i class="fas fa-qrcode"></i> View QR Code
+                </button>
+              </div>
             </div>
-
-            <p class="text-muted text-center mt-3">ID: RRD-2021-001</p>
-
-            <button
-              type="button"
-              class="btn btn-xs btn-default btn-block btn-flat button-upload mt-1"
-              @click="viewQRCode"
-            >
-              <i class="fas fa-qrcode"></i> View QR Code
-            </button>
           </div>
-        </div>
 
-        <div class="form-group mb-3">
-          <span class="form-control" style="height: auto">
-            {{ student.first_name || "---" }} {{ student.last_name || "---" }}
-          </span>
-          <label class="bottom-label" v-show="true"> Full Name </label>
-        </div>
+          <div class="col-sm-8 col-md-9 col-lg-9">
+            <div class="text-muted">
+              <hr class="mb-4" />
+              <div class="pl-lg-4 pl-sm-2">
+                <h6 class="heading-small text-muted mb-4">
+                  <span class="badge badge-primary">Student Details</span>
+                </h6>
+                <div class="row">
+                  <div class="col-6">
+                    <p class="text-sm">
+                      Full Name
+                      <b class="d-block">
+                        {{ student.first_name || "---" }}
+                        {{ student.last_name || "---" }}
+                      </b>
+                    </p>
+                  </div>
+                  <div class="col-6">
+                    <p class="text-sm">
+                      Course / Year - Section
+                      <b class="d-block">
+                        {{ student.course_name || "---" }} /
+                        {{ student.year_level || "---" }} -
+                        {{ student.section || "---" }}
+                      </b>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <p class="text-sm">
+                      Address
+                      <b class="d-block">
+                        {{ student.street ? student.street + ", " : "" }}
+                        {{ student.barangay ? student.barangay + ", " : "" }}
+                        {{ student.city ? student.city + ", " : "" }}
+                        {{ student.province ? student.province + ", " : "" }}
+                        {{ student.region ? student.region : "" }}
+                      </b>
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-        <div class="form-group mb-3">
-          <span class="form-control" style="height: auto">
-            {{ student.street ? student.street + ", " : "" }}
-            {{ student.barangay ? student.barangay + ", " : "" }}
-            {{ student.city ? student.city + ", " : "" }}
-            {{ student.province ? student.province + ", " : "" }}
-            {{ student.region ? student.region : "" }}
-          </span>
-          <label class="bottom-label" v-show="true"> Address </label>
-        </div>
+              <hr class="my-4" />
+              <div class="pl-lg-4 pl-sm-2">
+                <h6 class="heading-small text-muted mb-4">
+                  <span class="badge badge-primary">Office Details</span>
+                  <span
+                    class="badge badge-danger"
+                    v-if="Object.keys(office).length === 0"
+                  >
+                    <i class="fas fa-times"></i> No office assigned yet
+                  </span>
+                </h6>
 
-        <div class="form-group mb-3">
-          <span class="form-control" style="height: auto">
-            BSIT / 3rd - A
-          </span>
-          <label class="bottom-label" v-show="true">
-            Course / Year - Section
-          </label>
-        </div>
-
-        <div class="form-group mb-3">
-          <span class="form-control" style="height: auto"> SAMPLE </span>
-          <label class="bottom-label" v-show="true"> OJT Office </label>
-        </div>
-
-        <div class="form-group mb-3">
-          <span class="form-control" style="height: auto">
-            Sample sample sample
-          </span>
-          <label class="bottom-label" v-show="true"> OJT Office Address </label>
+                <div class="row">
+                  <div class="col-12">
+                    <p class="text-sm">
+                      OJT Office
+                      <b class="d-block">
+                        {{ office.office_name || "" }}
+                        {{
+                          Object.keys(office).length === 0
+                            ? "-- No office --"
+                            : ""
+                        }}
+                      </b>
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <p class="text-sm">
+                      OJT Office Address
+                      <b class="d-block">
+                        {{ office.street ? office.street + ", " : "" }}
+                        {{ office.barangay ? office.barangay + ", " : "" }}
+                        {{ office.city ? office.city + ", " : "" }}
+                        {{ office.province ? office.province + ", " : "" }}
+                        {{ office.region ? office.region : "" }}
+                        {{
+                          Object.keys(office).length === 0
+                            ? "-- No office --"
+                            : ""
+                        }}
+                      </b>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="col-sm-8 col-md-9 col-lg-9">
+      <div class="col-sm-12">
+        <hr class="my-4" />
+        <h6 class="heading-small text-muted mb-4">
+          <span class="badge badge-primary">Attendance Records</span>
+        </h6>
         <div class="card">
-          <!-- <div class="card card-danger card-outline"> -->
-          <div class="card-header">
-            <h3 class="card-title">Attendance Records</h3>
-          </div>
+          <!-- <div class="card-header">
+            <h3 class="card-title">
+              <span class="badge badge-primary">Attendance Records</span>
+            </h3>
+          </div> -->
           <div class="card-body p-0 table-responsive">
             <table
               class="table table-sm table-bordered table-head-fixed text-nowrap"
@@ -119,22 +189,32 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  v-for="(item, key) in [
-                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                    10,
-                  ]"
-                  :key="key"
-                >
-                  <td class="text-left">9/21/2021</td>
-                  <td class="text-center">8:00 AM</td>
-                  <td class="text-center">11:30 AM</td>
-                  <td class="text-center">1:00 PM</td>
-                  <td class="text-center">5:30 PM</td>
-                  <td class="text-right">{{ key }}</td>
+                <tr v-if="attendance.length === 0">
+                  <td colspan="6" class="text-center">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    No data found!
+                  </td>
+                </tr>
+                <tr v-for="(i, k) in attendance" :key="k">
+                  <td class="text-left">
+                    {{ toDateOnly(i.attendance_date) || "---" }}
+                  </td>
+                  <td class="text-center">
+                    {{ toTimeOnly(i.time_in_am) || "---" }}
+                  </td>
+                  <td class="text-center">
+                    {{ toTimeOnly(i.time_in_pm) || "---" }}
+                  </td>
+                  <td class="text-center">
+                    {{ toTimeOnly(i.time_out_am) || "---" }}
+                  </td>
+                  <td class="text-center">
+                    {{ toTimeOnly(i.time_out_pm) || "---" }}
+                  </td>
+                  <td class="text-right">{{ k }}</td>
                 </tr>
 
-                <tr>
+                <tr v-if="attendance.length > 0">
                   <!-- <td>
                     Page:
                     <select style="padding: 0 5px" name="page">
@@ -166,12 +246,23 @@ export default {
 
     attendance: [],
     student: {},
-    office: {},
+    office: [],
   }),
 
   props: ["student_id"],
 
-  computed: {},
+  computed: {
+    toDateOnly() {
+      return (d) => {
+        return d ? this.$moment(new Date(d)).format("MM/DD/YYYY") : null;
+      };
+    },
+    toTimeOnly() {
+      return (d) => {
+        return d ? this.$moment(new Date(d)).format("hh:mm A") : null;
+      };
+    },
+  },
 
   mounted() {
     this.getStudentByID();
@@ -231,8 +322,10 @@ export default {
         console.log("data", data);
         if ([200, 201].indexOf(status) > -1) {
           this.attendance = data.attendance_list || [];
-          this.office = data.office || {};
-          delete data.attendance;
+          // this.office = data?.office?.[0] || {};
+          this.office =
+            data?.office?.find((i) => i.pivot.duty_status === "active") || {};
+          delete data.attendance_list;
           delete data.office;
           this.student = data || {};
         }

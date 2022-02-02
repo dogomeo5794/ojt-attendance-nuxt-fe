@@ -1,15 +1,18 @@
 <template>
-  <StudentsDetails :student_id="student_id" v-if="is_loading === false" />
+  <AdminPersonnelsInfo
+    :personnel_id="personnel_id"
+    v-if="is_loading === false"
+  />
 </template>
 
 <script>
 export default {
   meta: {
-    role: "authorized-personnel",
+    role: "admin",
   },
   data: () => ({
     is_loading: null,
-    student_id: null,
+    personnel_id: null,
   }),
 
   watch: {},
@@ -23,7 +26,7 @@ export default {
   methods: {
     initApp() {
       this.is_loading = true;
-      this.student_id = this.$route.params.student_id || null;
+      this.personnel_id = this.$route.params.personnel_id || null;
       this.$nextTick(() => {
         this.is_loading = false;
       });

@@ -4,6 +4,9 @@
 
 <script>
 export default {
+  meta: {
+    role: "admin",
+  },
   data: () => ({}),
 
   watch: {},

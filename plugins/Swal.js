@@ -1,14 +1,4 @@
 import Swal from "sweetalert2";
-import Vue from "vue";
-
-const plugin = {
-  install() {
-    Vue._swal = Swal;
-    Vue.prototype.$_swal = Swal;
-  },
-};
-
-Vue.use(plugin);
 
 let confirm = ({
   icon,

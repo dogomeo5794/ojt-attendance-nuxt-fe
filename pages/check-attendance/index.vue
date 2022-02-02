@@ -1,6 +1,10 @@
 <template>
-  <Faker404 v-if="notFound" />
-  <AttendanceScanID ref="scan_id" :callbackResult="result" v-else />
+  <!-- <Faker404 v-if="notFound" /> -->
+  <AttendanceScanID
+    ref="scan_id"
+    :callbackResult="result"
+    :closeButton="closeButton"
+  />
 </template>
 
 <script>
@@ -10,7 +14,20 @@ export default {
     notFound: false,
   }),
 
-  watch: {},
+  watch: {
+    notFound(newVal) {
+      const error = this.$nuxt.context.error;
+      if (
+        newVal === true &&
+        Object.prototype.toString.call(error) === "[object Function]"
+      ) {
+        error({
+          statusCode: 404,
+          message: "Request timeout",
+        });
+      }
+    },
+  },
 
   computed: {
     getPersonnelID() {
@@ -30,6 +47,10 @@ export default {
       } else {
         this.notFound = false;
       }
+    },
+
+    closeButton() {
+      this.$router.go(-1);
     },
 
     async result(content) {
@@ -66,7 +87,7 @@ export default {
             .then((result) => {
               console.log("result", result);
               if (result.isConfirmed) {
-                this.$router.go(-1);
+                this.closeButton();
               } else if (result.isDismissed) {
                 this.$refs.scan_id.turnCameraOn();
               }

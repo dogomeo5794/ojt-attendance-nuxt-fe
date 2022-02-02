@@ -1,11 +1,11 @@
 <template>
-  <StudentsDetails :student_id="student_id" v-if="is_loading === false" />
+  <AdminStudentsInfo :student_id="student_id" v-if="is_loading === false" />
 </template>
 
 <script>
 export default {
   meta: {
-    role: "authorized-personnel",
+    role: "admin",
   },
   data: () => ({
     is_loading: null,

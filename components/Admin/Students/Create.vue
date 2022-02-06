@@ -306,7 +306,7 @@
                 <ValidationProvider
                   :rules="{ required: true, regex: /^[0-9]*$/, max: 12 }"
                   v-slot="{ errors, failed, failedRules }"
-                  name="birthday"
+                  name="contact_no"
                   slim
                 >
                   <div class="form-group">

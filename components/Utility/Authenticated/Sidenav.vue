@@ -16,13 +16,16 @@
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <img
-            src="/img/icons/avatar.jpg"
+            :src="`${getProfile || '/img/icons/avatar.jpg'}`"
             class="img-circle elevation-2"
             alt="User Image"
           />
         </div>
         <div class="info">
-          <a href="#" class="d-block">{{ getUserName }}</a>
+          <!-- <a href="#" class="d-block">{{ getUserName }}</a> -->
+          <router-link tag="a" :to="{ name: getProfileLink }" class="d-block">
+            {{ getUserName }}
+          </router-link>
         </div>
       </div>
 
@@ -205,6 +208,10 @@ export default {
       return `${this.user.first_name} ${this.user.last_name}`;
     },
 
+    getProfile() {
+      return this.account?.profile || null;
+    },
+
     getUserType() {
       return this.account?.user_type?.toLowerCase() || null;
     },
@@ -225,6 +232,16 @@ export default {
         return this.adminSidenavLinks;
       } else {
         return [];
+      }
+    },
+
+    getProfileLink() {
+      if (this.getUserType === "authorized-personnel") {
+        return "personnel-profile";
+      } else if (this.getUserType === "admin") {
+        return "admin-dashboard-profile";
+      } else {
+        return null;
       }
     },
   },

@@ -13,7 +13,7 @@
               <img
                 id="user-pp"
                 class="profile-user-img img-fluid img-circle"
-                :src="`/img/icons/avatar.jpg`"
+                :src="`${student.profile || '/img/icons/avatar.jpg'}`"
                 alt="User profile picture"
                 style="border-radius: 0; width: 100%; border: 2px solid #adb5bd"
               />

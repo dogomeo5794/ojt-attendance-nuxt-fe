@@ -13,7 +13,11 @@ export default {
 
   computed: {},
 
-  mounted() {},
+  mounted() {
+    this.$router.push({
+      name: "admin-dashboard-students",
+    });
+  },
 
   methods: {},
 };

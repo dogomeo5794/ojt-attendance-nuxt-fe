@@ -5,9 +5,7 @@
         <div class="card-header">
           <h3 class="card-title"></h3>
         </div>
-        <div class="card-body">
-          Dashboard here....
-        </div>
+        <div class="card-body">Dashboard here....</div>
       </div>
     </div>
   </div>
@@ -24,8 +22,6 @@ export default {
 
   mounted() {},
 
-  methods: {
-    
-  },
+  methods: {},
 };
 </script>

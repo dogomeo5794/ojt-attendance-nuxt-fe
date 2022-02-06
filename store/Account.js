@@ -11,6 +11,13 @@ export const actions = {
     return serialize(err ? err.response : data);
   },
 
+  async UpdateInformation(ctx, payload) {
+    const [err, data] = await to(
+      this.$axios.post(`${prefix}/update-information`, payload)
+    );
+    return serialize(err ? err.response : data);
+  },
+
   async SearchOffice(ctx, payload) {
     const [err, data] = await to(
       this.$axios.post(`${prefix}/search-existing-office`, payload)

@@ -97,17 +97,17 @@ export default {
     title: "EA-OJT",
     isLoading: false,
     adminSidenavLinks: [
-      {
-        isHeader: true,
-        label: "Dashboard",
-      },
-      {
-        isHeader: false,
-        label: "Dashboard",
-        icon: "fas fa-tachometer-alt",
-        routeName: "admin-dashboard",
-        routePath: "/",
-      },
+      // {
+      //   isHeader: true,
+      //   label: "Dashboard",
+      // },
+      // {
+      //   isHeader: false,
+      //   label: "Dashboard",
+      //   icon: "fas fa-tachometer-alt",
+      //   routeName: "admin-dashboard",
+      //   routePath: "/",
+      // },
       {
         isHeader: true,
         label: "Main App",
@@ -133,30 +133,30 @@ export default {
         routeName: "admin-dashboard-personnels",
         routePath: "/admin-dashboard/personnels",
       },
-      {
-        isHeader: true,
-        label: "Reports",
-      },
-      {
-        isHeader: false,
-        label: "Generate Reports",
-        icon: "fas fa-file-excel",
-        routeName: "",
-        routePath: "",
-      },
+      // {
+      //   isHeader: true,
+      //   label: "Reports",
+      // },
+      // {
+      //   isHeader: false,
+      //   label: "Generate Reports",
+      //   icon: "fas fa-file-excel",
+      //   routeName: "",
+      //   routePath: "",
+      // },
     ],
     personnelSidenavLinks: [
-      {
-        isHeader: true,
-        label: "Dashboard",
-      },
-      {
-        isHeader: false,
-        label: "Dashboard",
-        icon: "fas fa-tachometer-alt",
-        routeName: "personnel",
-        routePath: "/personnel",
-      },
+      // {
+      //   isHeader: true,
+      //   label: "Dashboard",
+      // },
+      // {
+      //   isHeader: false,
+      //   label: "Dashboard",
+      //   icon: "fas fa-tachometer-alt",
+      //   routeName: "personnel",
+      //   routePath: "/personnel",
+      // },
       {
         isHeader: true,
         label: "Main App",
@@ -175,17 +175,17 @@ export default {
         routeName: "check-attendance",
         routePath: "/check-attendance",
       },
-      {
-        isHeader: true,
-        label: "Reports",
-      },
-      {
-        isHeader: false,
-        label: "Generate Reports",
-        icon: "fas fa-file-excel",
-        routeName: "",
-        routePath: "",
-      },
+      // {
+      //   isHeader: true,
+      //   label: "Reports",
+      // },
+      // {
+      //   isHeader: false,
+      //   label: "Generate Reports",
+      //   icon: "fas fa-file-excel",
+      //   routeName: "",
+      //   routePath: "",
+      // },
     ],
   }),
 

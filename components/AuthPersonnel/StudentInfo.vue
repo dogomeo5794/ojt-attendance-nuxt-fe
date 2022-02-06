@@ -139,9 +139,15 @@
           </div>
         </div>
 
-        <button class="btn btn-outline-success float-right">
-          <i class="fas fa-file-excel"></i> Export
-        </button>
+        <div class="float-right">
+          <button class="btn btn-outline-danger">
+            <i class="fas fa-arrow-back"></i> Back
+          </button>
+
+          <!-- <button class="btn btn-outline-success">
+            <i class="fas fa-file-excel"></i> Export
+          </button> -->
+        </div>
       </div>
     </div>
   </div>

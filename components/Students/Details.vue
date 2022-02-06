@@ -1,5 +1,5 @@
 <template>
-  <div class="container mb-3">
+  <div class="container mb-5">
     <div class="row">
       <div class="col-12">
         <div class="row">
@@ -231,9 +231,14 @@
           </div>
         </div>
 
-        <button class="btn btn-outline-success float-right">
-          <i class="fas fa-file-excel"></i> Export
-        </button>
+        <div class="">
+          <button class="btn btn-outline-danger" @click="$router.go(-1)">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <!-- <button class="btn btn-outline-success">
+            <i class="fas fa-file-excel"></i> Export
+          </button> -->
+        </div>
       </div>
     </div>
   </div>

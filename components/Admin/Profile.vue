@@ -478,7 +478,13 @@ export default {
     is_submit_loading: false,
     office: {},
     account: {},
-    admin: {},
+    admin: {
+      first_name: null,
+      middle_name: null,
+      last_name: null,
+      birthday: null,
+      contact_no: null,
+    },
 
     newProfile: null,
 
@@ -551,7 +557,14 @@ export default {
       this.$nextTick(() => {
         // this.personnelInfo();
         this.account = this.$store.state.userAccount || {};
-        this.admin = this.$store.state.user || {};
+        this.admin = {
+          ...(this.$store.state.user || {}),
+          first_name: this.$store.state?.user?.first_name || null,
+          middle_name: this.$store.state?.user?.middle_name || null,
+          last_name: this.$store.state?.user?.last_name || null,
+          birthday: this.$store.state?.user?.birthday || null,
+          contact_no: this.$store.state?.user?.contact_no || null,
+        };
       });
     },
 
@@ -617,14 +630,16 @@ export default {
         contact_no: this.admin.contact_no || null,
         profile: this.getProfile || null,
         account_id: this.account.id || null,
+        company_id: this.admin.company_id || null,
+        account: "admin",
       };
 
       if (this.is_update_address) {
-        this.barangay = this.new_barangay || null;
-        this.city = this.new_city || null;
-        this.province = this.new_province || null;
-        this.region = this.new_region || null;
-        this.street = this.new_street || null;
+        payload.barangay = this.new_barangay?.name || null;
+        payload.city = this.new_city?.name || null;
+        payload.province = this.new_province?.name || null;
+        payload.region = this.new_region?.name || null;
+        payload.street = this.new_street || null;
       }
 
       console.log("payload", payload);
@@ -661,10 +676,24 @@ export default {
         .then((result) => {
           this.is_submit_loading = false;
           if (!result.isConfirmed) return;
-          this.resetForm();
-          this.$swal.success({
-            text: "Your information was successfully updated.",
-          });
+          // this.resetForm();
+          localStorage.clear();
+          this.$store.commit("setUserAccount", {});
+          this.$store.commit("setIsLogged", false);
+          this.$store.commit("setUser", {});
+          this.$swal
+            .success({
+              text: "Your information was successfully updated. Your session has stop. Please re-login again your again.",
+            })
+            .then(() => {
+              let vm = this;
+              setTimeout(() => {
+                vm.$router.push({
+                  name: "login",
+                });
+                resolve(true);
+              }, 300);
+            });
         });
     },
 

@@ -188,10 +188,10 @@
                       {{ toTimeOnly(i.time_in_am) || "---" }}
                     </td>
                     <td class="text-center">
-                      {{ toTimeOnly(i.time_in_pm) || "---" }}
+                      {{ toTimeOnly(i.time_out_am) || "---" }}
                     </td>
                     <td class="text-center">
-                      {{ toTimeOnly(i.time_out_am) || "---" }}
+                      {{ toTimeOnly(i.time_in_pm) || "---" }}
                     </td>
                     <td class="text-center">
                       {{ toTimeOnly(i.time_out_pm) || "---" }}
@@ -231,9 +231,9 @@
               <i class="fas fa-qrcode"></i> Re-scan
             </button>
 
-            <button class="btn btn-outline-success">
+            <!-- <button class="btn btn-outline-success">
               <i class="fas fa-file-excel"></i> Export
-            </button>
+            </button> -->
           </div>
         </div>
       </div>

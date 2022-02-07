@@ -4,7 +4,7 @@
     ref="wrapper"
     @fullscreenchange="onFullscreenChange"
   >
-    <div class="qr-code-wrapper">
+    <div class="qr-code-wrapper" v-if="hasCamera">
       <qrcode-stream
         :camera="camera"
         @decode="onDecode"
@@ -56,6 +56,12 @@
         </div>
       </qrcode-stream>
     </div>
+    <div class="text-center" v-else>
+      <h3>
+        <i class="fas fa-exclamation-triangle"></i>
+        No Camera found.
+      </h3>
+    </div>
   </div>
 </template>
 
@@ -82,6 +88,7 @@ export default {
 
     noRearCamera: false,
     noFrontCamera: false,
+    hasCamera: true,
   }),
 
   computed: {
@@ -219,6 +226,10 @@ export default {
         if (triedFrontCamera && cameraMissingError) {
           this.noFrontCamera = true;
           this.showError("front");
+        }
+
+        if (error.name === "NotFoundError") {
+          this.hasCamera = false;
         }
 
         console.error(error);

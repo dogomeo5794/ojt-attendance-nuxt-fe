@@ -414,6 +414,7 @@ export default {
         contact_no: this.personnel.contact_no || null,
         profile: this.getProfile || null,
         account_id: this.account.id || null,
+        account: "personnel",
       };
 
       console.log("payload", payload);
@@ -450,10 +451,25 @@ export default {
         .then((result) => {
           this.is_submit_loading = false;
           if (!result.isConfirmed) return;
-          this.resetForm();
-          this.$swal.success({
-            text: "Your information was successfully updated.",
-          });
+          // this.resetForm();
+
+          localStorage.clear();
+          this.$store.commit("setUserAccount", {});
+          this.$store.commit("setIsLogged", false);
+          this.$store.commit("setUser", {});
+          this.$swal
+            .success({
+              text: "Your information was successfully updated. Your session has stop. Please re-login again your again.",
+            })
+            .then(() => {
+              let vm = this;
+              setTimeout(() => {
+                vm.$router.push({
+                  name: "login",
+                });
+                resolve(true);
+              }, 300);
+            });
         });
     },
 

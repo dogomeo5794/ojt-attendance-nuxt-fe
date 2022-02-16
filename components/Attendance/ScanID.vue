@@ -60,6 +60,13 @@
       <h3>
         <i class="fas fa-exclamation-triangle"></i>
         No Camera found.
+        <a
+          href="#"
+          @click.prevent="$router.go(-1)"
+          class="btn btn-block btn-danger mt-4"
+        >
+          Back
+        </a>
       </h3>
     </div>
   </div>

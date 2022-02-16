@@ -71,13 +71,16 @@
 
         <div class="social-auth-links text-center mb-3">
           <p>- OR -</p>
-          <!-- <a href="#" class="btn btn-block btn-primary">
-            <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
-          </a> -->
+          <router-link
+            :to="{ name: 'login' }"
+            class="btn btn-block btn-outline-info"
+          >
+            <i class="fas fa-user-tie"></i> Sign in as Authorized Personnel
+          </router-link>
         </div>
 
         <p class="mb-1">
-          <a href="#">I forgot my password</a>
+          <!-- <a href="#">I forgot my password</a> -->
         </p>
         <!-- <p class="mb-0">
           <a href="#">Register account</a>

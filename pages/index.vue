@@ -80,7 +80,9 @@ export default {
   props: ["originPage"],
 
   mounted() {
-    console.log("dddfdfdfdsfsdfs", "tttt");
+    this.$router.push({
+      name: "login",
+    });
     // document.body.className = "";
     // document.body.classList.add("hold-transition", "login-page");
   },

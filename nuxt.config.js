@@ -9,8 +9,8 @@ export default {
   ssr: false,
 
   server: {
-    port: 8002,
-    host: "0.0.0.0",
+    port: process.env.NUXT_PORT,
+    host: process.env.NUXT_HOST,
   },
 
   generate: {

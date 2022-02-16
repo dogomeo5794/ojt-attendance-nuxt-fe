@@ -203,15 +203,17 @@
                     {{ toTimeOnly(i.time_in_am) || "---" }}
                   </td>
                   <td class="text-center">
-                    {{ toTimeOnly(i.time_in_pm) || "---" }}
+                    {{ toTimeOnly(i.time_out_am) || "---" }}
                   </td>
                   <td class="text-center">
-                    {{ toTimeOnly(i.time_out_am) || "---" }}
+                    {{ toTimeOnly(i.time_in_pm) || "---" }}
                   </td>
                   <td class="text-center">
                     {{ toTimeOnly(i.time_out_pm) || "---" }}
                   </td>
-                  <td class="text-right">{{ k }}</td>
+                  <td class="text-right">
+                    {{ formattedTime(i.total, "HH:mm") || "00:00" }} hrs
+                  </td>
                 </tr>
 
                 <tr v-if="attendance.length > 0">
@@ -224,7 +226,7 @@
                     </select>
                   </td> -->
                   <td colspan="5" class="text-center">Total</td>
-                  <td class="text-right">00:00</td>
+                  <td class="text-right">{{ total_time || "00:00" }} hrs</td>
                 </tr>
               </tbody>
             </table>
@@ -252,6 +254,7 @@ export default {
     attendance: [],
     student: {},
     office: [],
+    total_time: null,
   }),
 
   props: ["student_id"],
@@ -326,18 +329,63 @@ export default {
         console.log("status", status);
         console.log("data", data);
         if ([200, 201].indexOf(status) > -1) {
-          this.attendance = data.attendance_list || [];
+          this.attendance =
+            data.attendance_list.map((i) => {
+              let am = this.calculateDiff(i.time_in_am, i.time_out_am);
+              let pm = this.calculateDiff(i.time_in_pm, i.time_out_pm);
+              let total = this.calculateTime(am, pm);
+              // total = this.formattedTime(total, "HH:mm");
+              i.total = total;
+              return i;
+            }) || [];
           // this.office = data?.office?.[0] || {};
+
           this.office =
             data?.office?.find((i) => i.pivot.duty_status === "active") || {};
           delete data.attendance_list;
           delete data.office;
           this.student = data || {};
         }
-        this.$nextTick(() => (this.isLoading = false));
+        this.$nextTick(() => {
+          this.isLoading = false;
+          this.total_time = this.attendance.reduce((prev, cur) => {
+            let c = this.formattedTime(cur.total);
+            let p = prev == "00:00:00" ? prev : this.formattedTime(prev);
+            return this.$moment.duration(c).add(p);
+          }, "00:00:00");
+          this.$nextTick(() => {
+            this.total_time =
+              this.total_time === "00:00:00"
+                ? this.total_time
+                : this.formattedTime(this.total_time, "HH:mm");
+          });
+        });
       } catch (error) {
         this.isLoading = false;
       }
+    },
+
+    toTime(d) {
+      return d ? this.$moment(d).format("HH:mm:ss") : null;
+    },
+
+    calculateTime(prev, cur) {
+      return this.$moment.duration(cur).add(prev) || null;
+    },
+
+    calculateDiff(start, end) {
+      if (!start || !end) return null;
+      let start_date = this.$moment(start, "YYYY-MM-DD HH:mm:ss");
+      let end_date = this.$moment(end, "YYYY-MM-DD HH:mm:ss");
+      var ms = end_date.diff(start_date);
+      var d = this.$moment.duration(ms);
+      var s = Math.floor(d.asHours()) + this.$moment.utc(ms).format(":mm:ss");
+      return s;
+    },
+
+    formattedTime(time, format = "HH:mm:ss") {
+      if (!time) return null;
+      return this.$moment.utc(time.asMilliseconds()).format(format) || null;
     },
   },
 };

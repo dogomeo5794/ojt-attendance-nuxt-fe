@@ -48,6 +48,7 @@ export default {
   },
 
   beforeMount() {
+    document.body.style = "";
     document.body.className = "";
     // document.body.classList.remove('hold-transition','login-page');
     document.body.classList.add(
@@ -56,6 +57,12 @@ export default {
       "layout-fixed",
       "accent-primary"
     );
+
+    $(document).ready(function () {
+      $(`[data-card-widget="card-refresh"]`).each(function () {
+        CardRefresh._jQueryInterface.call($(this));
+      });
+    });
   },
 };
 </script>

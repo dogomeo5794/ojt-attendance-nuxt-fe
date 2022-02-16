@@ -1,7 +1,8 @@
 <template>
-  <div class="login-box">
+  <!-- <div class="login-box">
     <Nuxt />
-  </div>
+  </div> -->
+  <Nuxt />
 </template>
 
 <script>
@@ -29,8 +30,14 @@ export default {
 
   methods: {
     initApp() {
+      document.body.style = "";
       document.body.className = "";
       document.body.classList.add("hold-transition", "login-page");
+      $(document).ready(function () {
+        $(`[data-card-widget="card-refresh"]`).each(function () {
+          CardRefresh._jQueryInterface.call($(this));
+        });
+      });
     },
   },
 

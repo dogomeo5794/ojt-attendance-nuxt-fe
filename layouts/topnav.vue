@@ -43,8 +43,14 @@ export default {
   },
 
   beforeMount() {
+    document.body.style = "";
     document.body.className = "";
     document.body.classList.add("hold-transition", "layout-top-nav");
+    $(document).ready(function () {
+      $(`[data-card-widget="card-refresh"]`).each(function () {
+        CardRefresh._jQueryInterface.call($(this));
+      });
+    });
   },
 
   beforeDestroy() {
